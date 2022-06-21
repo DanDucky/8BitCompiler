@@ -8,11 +8,16 @@ enum Instruct {
 
 static hash<string> StringHasher;
 
-static int MoveMemoryOffset (string Line) {
-	static int Offset;
+static int IndexNums (string Line, int NumArgs) {
+	static size_t Offset = 0;
+	Line = Line.substr(5,30);
+	for (static int Cycles = 1; Cycles <= NumArgs; Cycles++) {
+		if (Line.find(' ') > 5 + Offset) {
+			Offset++;
+		}
+		Line = Line.substr(6 + Offset, 20);
+	}
 	return Offset;
-	// RETURN AN OFFSET USING A SYSTEM OF FINDING NEXT INTEGER AND SKIPPING OVER TO FIND THE SECOND SET OF INTEGERS
-	// TAKE INPUT OF NUMBER OF SKIPS TO REUSE IN MULTIPLE FUNCTIONS
 }
 
 static string Interpret (string Args, string Instruction, unsigned char UsingRead) {
@@ -55,12 +60,17 @@ int main () {
 	getline(cin, Line);
 	switch (StringToInt(Line.substr(0,4))) {
 	case 1:
-		Out = Interpret(Line.substr(5,6), "00", 1);
-		if (stoi(Line.substr(9,2)) >= 10) {
-			Out = Out + Interpret(Line.substr(12,6), "", 0);
+		Out = Interpret(Line.substr(5,6), "00", 1) + Interpret(Line.substr(11 + IndexNums(Line, 1), 6), "", 0);
+		static unsigned int HashedArgs = StringHasher(Line.substr(17 + IndexNums(Line, 2),4));
+		switch (HashedArgs) {
+		case 321797183: // CLER
+			Out = Out + "1";
+			break;
+		case 4088169964: // KEEP
+			Out = Out + "0";
+			break;
 		}
-//		static unsigned int HashedArgs = StringHasher(Line.substr(0,4));
-		cout << Out;
+		cout << Out << endl;
 		break;
 	case 2:
 		cout << "DECL";
