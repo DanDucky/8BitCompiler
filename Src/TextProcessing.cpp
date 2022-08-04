@@ -23,12 +23,12 @@ static int IndexNums (string Line, int NumArgs) {
 static string Interpret (string Args, string Instruction, unsigned char UsingRead) {
 	static unsigned int HashedArgs = StringHasher(Args.substr(0,4));
 	switch (HashedArgs) {
-	case 1766669891: // MEMO
+	case 1766669891: // MEMO !!!SOMETIMES USED AS "READ" BY "GOTO"!!!
 		if (UsingRead == 1) Instruction = Instruction + "0";
 		Instruction = Instruction + "1" +
 				bitset<5>(stoi(Args.substr(4,2))).to_string();
 		break;
-	case 8525556: // CACH
+	case 8525556: // CACH !!!SOMETIMES USED AS "MEMO" BY "GOTO"!!!
 		if (UsingRead == 1) Instruction = Instruction + "0";
 		Instruction = Instruction + "0" +
 				bitset<5>(stoi(Args.substr(4,2))).to_string();
@@ -80,7 +80,9 @@ int main () {
 		cout << Out << endl;
 		break;
 	case 3: // GOTO
-		cout << "GOTO";
+		if (Line.substr(5,4) == "READ") Out = Interpret("MEMO" + Line.substr(9,2), "10", 0);
+		else if (Line.substr(5,4) == "MEMO") Out = Interpret("CACH" + Line.substr(9,2), "10", 0);
+		cout << Out << endl;
 		break;
 	case 4: // CLER
 		Out = Interpret(Line.substr(5,6), "11", 0);
