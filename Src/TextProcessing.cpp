@@ -53,44 +53,40 @@ int StringToInt (std::string Instruction) { // I DID IT... ARE YA HAPPY MAEVE?
 	return 0;
 }
 
-int main () {
-	int LineNum = 1;
-	string Line;
+string InstructionP (string Line) {
 	string Out;
-	getline(cin, Line);
-	switch (StringToInt(Line.substr(0,4))) {
-	case 1: // MOVE
-		Out = Interpret(Line.substr(5,6), "00", 1) + Interpret(Line.substr(11 + IndexNums(Line, 1), 6), "", 0);
-		static unsigned int HashedArgs = StringHasher(Line.substr(17 + IndexNums(Line, 2),4));
-		switch (HashedArgs) {
-		case 321797183: // CLER
-			Out = Out + "1";
+	switch (StringToInt(Line.substr(0, 4))) {
+		case 1: // MOVE
+			Out = Interpret(Line.substr(5,6), "00", 1) + Interpret(Line.substr(11 + IndexNums(Line, 1), 6), "", 0);
+			static unsigned int HashedArgs = StringHasher(Line.substr(17 + IndexNums(Line, 2),4));
+			switch (HashedArgs) {
+			case 321797183: // CLER
+				Out = Out + "1";
+				break;
+			case 4088169964: // KEEP
+				Out = Out + "0";
+				break;
+			default:
+				cout << "ERROR";
+				break;
+			}
+		Out = Out.substr(0, 8) + "\n" + Out.substr(8, 8);
 			break;
-		case 4088169964: // KEEP
-			Out = Out + "0";
+		case 2: // DECL
+			Out = Interpret(Line.substr(5,6), "01", 0) + Line.substr(11 + IndexNums(Line, 1),8);
+		Out = Out.substr(0, 8) + "\n" + Out.substr(8, 8);
+			break;
+		case 3: // GOTO
+			if (Line.substr(5,4) == "READ") Out = Interpret("MEMO" + Line.substr(9,2), "10", 0);
+			else if (Line.substr(5,4) == "MEMO") Out = Interpret("CACH" + Line.substr(9,2), "10", 0);
+			break;
+		case 4: // CLER
+			Out = Interpret(Line.substr(5,6), "11", 0);
 			break;
 		default:
-			cout << "ERROR";
+//			cout << "\033[1;31mError\033[0m: could not process instruction call \"" << Line.substr(0,4) << "\" on line " << LineNum;
+			exit(EXIT_FAILURE);
 			break;
 		}
-		cout << Out << endl;
-		break;
-	case 2: // DECL
-		Out = Interpret(Line.substr(5,6), "01", 0) + Line.substr(11 + IndexNums(Line, 1),8);
-		cout << Out << endl;
-		break;
-	case 3: // GOTO
-		if (Line.substr(5,4) == "READ") Out = Interpret("MEMO" + Line.substr(9,2), "10", 0);
-		else if (Line.substr(5,4) == "MEMO") Out = Interpret("CACH" + Line.substr(9,2), "10", 0);
-		cout << Out << endl;
-		break;
-	case 4: // CLER
-		Out = Interpret(Line.substr(5,6), "11", 0);
-		cout << Out << endl;
-		break;
-	default:
-		cout << "\033[1;31mError\033[0m: could not process instruction call \"" << Line.substr(0,4) << "\" on line " << LineNum;
-		exit(EXIT_FAILURE);
-		break;
-	}
+	return Out;
 }
