@@ -20,7 +20,8 @@ static int IndexNums (string Line, int NumArgs) {
 	return Offset;
 }
 
-static string Interpret (string Args, string Instruction, unsigned char UsingRead) {
+static string Interpret(string Args, string Instruction,
+		unsigned char UsingRead, int LineNum) {
 	static unsigned int HashedArgs = StringHasher(Args.substr(0,4));
 	switch (HashedArgs) {
 	case 1766669891: // MEMO !!!SOMETIMES USED AS "READ" BY "GOTO"!!!
@@ -39,7 +40,12 @@ static string Interpret (string Args, string Instruction, unsigned char UsingRea
 				bitset<5>(stoi(Args.substr(4,2))).to_string();
 		break;
 	default: // CATCH
-		cout << "default";
+		cout
+				<< "\n\033[1;31mError\033[0m: could not process storage type \""
+				<< Args.substr(0, 4) << "\" hashed as \"" << HashedArgs
+				<< "\" on line " << LineNum
+				<< "\nExiting...\n";
+		exit(EXIT_FAILURE);
 		break;
 	}
 	return Instruction;
@@ -53,11 +59,13 @@ int StringToInt (std::string Instruction) { // I DID IT... ARE YA HAPPY MAEVE?
 	return 0;
 }
 
-string InstructionP (string Line) {
+string InstructionP(string Line, int LineNum) {
 	string Out;
 	switch (StringToInt(Line.substr(0, 4))) {
 		case 1: // MOVE
-			Out = Interpret(Line.substr(5,6), "00", 1) + Interpret(Line.substr(11 + IndexNums(Line, 1), 6), "", 0);
+		Out = Interpret(Line.substr(5, 6), "00", 1, LineNum)
+				+ Interpret(Line.substr(11 + IndexNums(Line, 1), 6), "", 0,
+						LineNum);
 			static unsigned int HashedArgs = StringHasher(Line.substr(17 + IndexNums(Line, 2),4));
 			switch (HashedArgs) {
 			case 321797183: // CLER
@@ -73,18 +81,25 @@ string InstructionP (string Line) {
 		Out = Out.substr(0, 8) + "\n" + Out.substr(8, 8);
 			break;
 		case 2: // DECL
-			Out = Interpret(Line.substr(5,6), "01", 0) + Line.substr(11 + IndexNums(Line, 1),8);
+		Out = Interpret(Line.substr(5, 6), "01", 0, LineNum)
+				+ Line.substr(11 + IndexNums(Line, 1), 8);
 		Out = Out.substr(0, 8) + "\n" + Out.substr(8, 8);
 			break;
 		case 3: // GOTO
-			if (Line.substr(5,4) == "READ") Out = Interpret("MEMO" + Line.substr(9,2), "10", 0);
-			else if (Line.substr(5,4) == "MEMO") Out = Interpret("CACH" + Line.substr(9,2), "10", 0);
+		if (Line.substr(5, 4) == "READ") {
+			Out = Interpret("MEMO" + Line.substr(9, 2), "10", 0, LineNum);
+		} else if (Line.substr(5, 4) == "MEMO") {
+			Out = Interpret("CACH" + Line.substr(9, 2), "10", 0, LineNum);
+		}
 			break;
 		case 4: // CLER
-			Out = Interpret(Line.substr(5,6), "11", 0);
+		Out = Interpret(Line.substr(5, 6), "11", 0, LineNum);
 			break;
 		default:
-//			cout << "\033[1;31mError\033[0m: could not process instruction call \"" << Line.substr(0,4) << "\" on line " << LineNum;
+		cout
+				<< "\n\033[1;31mError\033[0m: could not process instruction call \""
+				<< Line.substr(0, 4) << "\" on line " << LineNum
+				<< "\nExiting...\n";
 			exit(EXIT_FAILURE);
 			break;
 		}

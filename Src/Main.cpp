@@ -17,15 +17,16 @@ void FileRead(char** argv) {
 	string Line;
 	string Binary;
 	ofstream OutputFile;
+	int LineNum = 0;
 	OutputFile.open((argv[2]));
 	int Arrow;
+	auto StartFull = high_resolution_clock::now();
 	if (InputFile.is_open()) {
-		int LineNum = 0;
 		while (getline(InputFile, Line)) {
 			LineNum++;
 			cout << "Line " << LineNum << " ┼ " << Line << " ";
 			auto start = high_resolution_clock::now();
-			Binary = InstructionP(Line);
+			Binary = InstructionP(Line, LineNum);
 			FileWrite(OutputFile, Binary);
 			auto stop = high_resolution_clock::now();
 			auto Duration = duration_cast < microseconds > (stop - start);
@@ -56,13 +57,23 @@ void FileRead(char** argv) {
 		}
 
 	} else {
-		//TODO: error handling UWUUWUUWUUW
+		cout
+				<< "\n\033[1;31mError\033[0m: could not open file \""
+				<< argv[1]
+				<< "\" please enter a valid file path"
+				<< "\nExiting...\n";
+		exit(EXIT_FAILURE);
 	}
+	auto StopFull = high_resolution_clock::now();
+	auto Duration = duration_cast<microseconds>(StopFull - StartFull);
+	cout << "Compiled " << LineNum <<
+	" lines of source code to " << LineNumOut
+			<< " lines of bytecode in " <<
+	Duration.count()
+			<< " microseconds\n";
 }
 
 int main (int argc, char** argv) {
-//	cout << "─┬─>";
-//           └└─>
 	cout << "Compiling " << argv[1] << " to " << argv[2] << "\n";
 	FileRead(argv);
 }
