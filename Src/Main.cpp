@@ -67,7 +67,7 @@ void FileRead(char** argv) {
 	auto StopFull = high_resolution_clock::now();
 	auto Duration = duration_cast<microseconds>(StopFull - StartFull);
 	cout << "Compiled " << LineNum <<
-	" lines of source code to " << LineNumOut
+	" lines of source code to " << LineNumOut - 1
 			<< " lines of bytecode in " <<
 	Duration.count()
 			<< " microseconds\n";
