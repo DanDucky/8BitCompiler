@@ -3,7 +3,7 @@
 using namespace std;
 
 enum Instruct {
-	eMOVE = 1, eDECL, eGOTO, eCLER
+	eMOVE = 1, eDECL, eGOTO, eCLER, eBLNK
 };
 
 static hash<string> StringHasher;
@@ -51,11 +51,12 @@ static string Interpret(string Args, string Instruction,
 	return Instruction;
 }
 
-int StringToInt (std::string Instruction) { // I DID IT... ARE YA HAPPY MAEVE?
+int StringToInt(std::string Instruction) { // I DID IT... ARE YA HAPPY MAEVE?
 	if (Instruction == "MOVE") return eMOVE;
 	if (Instruction == "DECL") return eDECL;
 	if (Instruction == "GOTO") return eGOTO;
 	if (Instruction == "CLER") return eCLER;
+	if (Instruction == "BLNK") return eBLNK;
 	return 0;
 }
 
@@ -94,6 +95,9 @@ string InstructionP(string Line, int LineNum) {
 			break;
 		case 4: // CLER
 		Out = Interpret(Line.substr(5, 6), "11", 0, LineNum);
+			break;
+		case 5: // BLNK
+			Out = "10000001"; // GOTO [ANY] 1 (meaning skip line)
 			break;
 		default:
 		cout

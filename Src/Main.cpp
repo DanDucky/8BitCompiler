@@ -6,17 +6,18 @@
 using namespace std;
 using namespace std::chrono;
 
+int LineNumOut = 1;
+ofstream OutputFile;
+
 void FileWrite(ofstream &OutputFile, string Binary) {
 	OutputFile << Binary << "\n";
 }
 
 void FileRead(char** argv) {
-	int LineNumOut = 1;
 	ifstream InputFile;
 	InputFile.open(argv[1]);
 	string Line;
 	string Binary;
-	ofstream OutputFile;
 	int LineNum = 0;
 	OutputFile.open((argv[2]));
 	int Arrow;
@@ -76,4 +77,9 @@ void FileRead(char** argv) {
 int main (int argc, char** argv) {
 	cout << "Compiling " << argv[1] << " to " << argv[2] << "\n";
 	FileRead(argv);
+	if (LineNumOut < 200) {
+		for (; LineNumOut <= 200; LineNumOut++) {
+			FileWrite(OutputFile, "10000001");
+		}
+	}
 }
