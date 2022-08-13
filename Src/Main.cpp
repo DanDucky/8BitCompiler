@@ -24,6 +24,9 @@ void FileRead(char** argv) {
 	auto StartFull = high_resolution_clock::now();
 	if (InputFile.is_open()) {
 		while (getline(InputFile, Line)) {
+			if (Line.find("  ") != string::npos) { //slowslowslow
+				Line = Line.substr(0, Line.find("  "));
+			}
 			LineNum++;
 			cout << "Line " << LineNum << " ┼ " << Line << " ";
 			auto start = high_resolution_clock::now();

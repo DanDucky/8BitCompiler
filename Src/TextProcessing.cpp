@@ -66,19 +66,7 @@ string InstructionP(string Line, int LineNum) {
 		case 1: // MOVE
 		Out = Interpret(Line.substr(5, 6), "00", 1, LineNum)
 				+ Interpret(Line.substr(11 + IndexNums(Line, 1), 6), "", 0,
-						LineNum);
-			static unsigned int HashedArgs = StringHasher(Line.substr(17 + IndexNums(Line, 2),4));
-			switch (HashedArgs) {
-			case 321797183: // CLER
-				Out = Out + "1";
-				break;
-			case 4088169964: // KEEP
-				Out = Out + "0";
-				break;
-			default:
-				cout << "ERROR";
-				break;
-			}
+						LineNum) + "0"; // removed KEEP/CLER support for MOVE
 		Out = Out.substr(0, 8) + "\n" + Out.substr(8, 8);
 			break;
 		case 2: // DECL
