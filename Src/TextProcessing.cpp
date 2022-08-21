@@ -3,10 +3,20 @@
 using namespace std;
 
 enum Instruct {
-	eMOVE = 1, eDECL, eGOTO, eCLER, eBLNK
+	eMOVE = 1, eDECL, eGOTO, eCLER, eBLNK, eCNST
 };
 
 static hash<string> StringHasher;
+
+static string RawByte (string Args, int LineNum) {
+	static string Byte;
+	if (Args.substr(0,1) == "&" && Args.substr(1,4) != "MOVE" && Args.substr(1,4) != "DECL") {
+		Byte = InstructionP(Args.substr(1,16), LineNum);
+	} else {
+		return Args.substr(0,8);
+	}
+	return Byte;
+}
 
 static int IndexNums (string Line, int NumArgs) {
 	static size_t Offset = 0;
@@ -57,6 +67,7 @@ int StringToInt(std::string Instruction) { // I DID IT... ARE YA HAPPY MAEVE?
 	if (Instruction == "GOTO") return eGOTO;
 	if (Instruction == "CLER") return eCLER;
 	if (Instruction == "BLNK") return eBLNK;
+	if (Instruction == "CNST") return eCNST;
 	return 0;
 }
 
@@ -71,8 +82,7 @@ string InstructionP(string Line, int LineNum) {
 			break;
 		case 2: // DECL
 		Out = Interpret(Line.substr(5, 6), "01", 0, LineNum)
-				+ Line.substr(11 + IndexNums(Line, 1), 8);
-		Out = Out.substr(0, 8) + "\n" + Out.substr(8, 8);
+				+ "\n" + RawByte(Line.substr(11 + IndexNums(Line, 1), 12), LineNum);
 			break;
 		case 3: // GOTO
 		if (Line.substr(5, 4) == "READ") {
@@ -86,6 +96,9 @@ string InstructionP(string Line, int LineNum) {
 			break;
 		case 5: // BLNK
 			Out = "10000001"; // GOTO [ANY] 1 (meaning skip line)
+			break;
+		case 6:
+			Out = RawByte(Line.substr(5, 16), LineNum); //16 is just a guess here...
 			break;
 		default:
 		cout

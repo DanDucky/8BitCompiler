@@ -19,8 +19,8 @@ void FileRead(char** argv) {
 	string Line;
 	string Binary;
 	int LineNum = 0;
-	OutputFile.open((argv[2]));
-	int Arrow;
+	OutputFile.open(argv[2]);
+	static unsigned int Arrow;
 	auto StartFull = high_resolution_clock::now();
 	if (InputFile.is_open()) {
 		while (getline(InputFile, Line)) {
