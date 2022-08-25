@@ -97,7 +97,7 @@ string InstructionP(string Line, int LineNum) {
 		case 5: // BLNK
 			Out = "10000001"; // GOTO [ANY] 1 (meaning skip line)
 			break;
-		case 6:
+		case 6: // CNST
 			Out = RawByte(Line.substr(5, 16), LineNum); //16 is just a guess here...
 			break;
 		default:

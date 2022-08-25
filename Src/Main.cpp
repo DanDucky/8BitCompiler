@@ -9,7 +9,7 @@ using namespace std::chrono;
 int LineNumOut = 1;
 ofstream OutputFile;
 
-void FileWrite(ofstream &OutputFile, string Binary) {
+void FileWrite(string Binary) {
 	OutputFile << Binary << "\n";
 }
 
@@ -31,7 +31,7 @@ void FileRead(char** argv) {
 			cout << "Line " << LineNum << " ┼ " << Line << " ";
 			auto start = high_resolution_clock::now();
 			Binary = InstructionP(Line, LineNum);
-			FileWrite(OutputFile, Binary);
+			FileWrite(Binary);
 			auto stop = high_resolution_clock::now();
 			auto Duration = duration_cast < microseconds > (stop - start);
 			for (Arrow = 0; Arrow < 24 - Line.length(); Arrow++) {
@@ -57,7 +57,7 @@ void FileRead(char** argv) {
 						<< " microseconds\n";
 				LineNumOut++;
 			}
-			
+
 		}
 
 	} else {
@@ -82,7 +82,7 @@ int main (int argc, char** argv) {
 	FileRead(argv);
 	if (LineNumOut < 200) {
 		for (; LineNumOut <= 200; LineNumOut++) {
-			FileWrite(OutputFile, "10000001");
+			FileWrite("10000001");
 		}
 	}
 }
