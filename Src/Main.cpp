@@ -28,7 +28,11 @@ void FileRead(char** argv) {
 				Line = Line.substr(0, Line.find("  "));
 			}
 			LineNum++;
-			cout << "Line " << LineNum << " ┼ " << Line << " ";
+			cout << "Line " << LineNum << " ";
+            for (unsigned short i = 0; i < 2 - log10(LineNum); i++) {
+                cout << " ";
+            }
+            cout << "┼ " << Line << " ";
 			auto start = high_resolution_clock::now();
 			Binary = InstructionP(Line, LineNum);
 			FileWrite(Binary);
@@ -41,7 +45,7 @@ void FileRead(char** argv) {
 				cout << "┬─" << "> " << Binary.substr(0, 8)
 						<< " ┼ Compiled line "
 						<< LineNumOut
-						<< " ─╮\n       │                          ╰─> "
+						<< " ─╮\n         │                          ╰─> "
 						<< Binary.substr(9, 8);
 				LineNumOut++;
 				cout << " ┼ Compiled line " << LineNumOut

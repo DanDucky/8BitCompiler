@@ -36,7 +36,7 @@
   
   + BLNK: NoOp, basically in code this is a GOTO with the final bit as 1
   + CNST: Not an actual computer instruction, but executed at compile time. This is used to declare a byte of memory to ReadOnly memory as a constant, it can either be a 1 byte string or a compiled instruction when using the '&' symbol
-  The lanuage has 3 different data storage types:
+  The language has 3 different data storage types:
   ```
   MEMO
   CACH
@@ -44,7 +44,7 @@
   ```
   + MEMO: Memory, there are 32 positions in memory, the last 16 are reserved for instructions and the first 2 are "additive" meaning that they do not clear when being written to, rather they have to be force-cleared by the CPU, and the rest of the memory is free to use in any way
   + CACH: "Cache", used to operate the CPU (give inputs or take outputs). A graph of the 32 different cache positions will be uploaded in the future
-  + READ: Read-only memory, there are 32 referecneable positions, the last 8 are consecutive while the rest each have 8 internal positions between them
+  + READ: Read-only memory, there are 32 referencable positions, the last 8 are consecutive while the rest each have 8 internal positions between them
   
   The language supports a compile-time 8 bit string constructor:
   ```
